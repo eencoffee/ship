@@ -51,6 +51,180 @@
                 return;
             }
 
+            const vertexShaderSource = `
+            attribute vec2 a_position;
+            uniform vec2 u_resolution;
+            uniform float u_rotation;
+            uniform vec2 u_translation;
+
+            void main() {
+                float c = cos(u_rotation);
+                float s = sin(u_rotation);
+                vec2 rotated = vec2(
+                    a_position.x * c - a_position.y * s,
+                    a_position.x * s + a_position.y * c
+                );
+
+                vec2 position = rotated + u_translation;
+
+                vec2 clipSpace = (position / u_resolution) * 2.0 - 1.0;
+                gl_Position = vec4(clipSpace * vec2(1, -1), 0, 1);
+            }
+        `;
+
+            const fragmentShaderSource = `
+            precision mediump float;
+            uniform vec4 u_color;
+
+            void main() {
+                gl_FragColor = u_color;
+            }
+        `;
+
+            function createShader(gl, type, source) {
+                const shader = gl.createShader(type);
+                gl.shaderSource(shader, source);
+                gl.compileShader(shader);
+                if (!gl.getShaderParameter(shader, gl.COMPILE_STATUS)) {
+                    console.error(gl.getShaderInfoLog(shader));
+                    gl.deleteShader(shader);
+                    return null;
+                }
+                return shader;
+            }
+
+            function createProgram(gl, vertexShader, fragmentShader) {
+                const program = gl.createProgram();
+                gl.attachShader(program, vertexShader);
+                gl.attachShader(program, fragmentShader);
+                gl.linkProgram(program);
+                if (!gl.getProgramParameter(program, gl.LINK_STATUS)) {
+                    console.error(gl.getProgramInfoLog(program));
+                    gl.deleteProgram(program);
+                    return null;
+                }
+                return program;
+            }
+
+            const vertexShader = createShader(
+                gl,
+                gl.VERTEX_SHADER,
+                vertexShaderSource
+            );
+            const fragmentShader = createShader(
+                gl,
+                gl.FRAGMENT_SHADER,
+                fragmentShaderSource
+            );
+            const program = createProgram(
+                gl,
+                vertexShader,
+                fragmentShader
+            );
+
+            const positionAttributeLocation = gl.getAttribLocation(
+                program,
+                'a_position'
+            );
+            const resolutionUniformLocation = gl.getUniformLocation(
+                program,
+                'u_resolution'
+            );
+            const colorUniformLocation = gl.getUniformLocation(
+                program,
+                'u_color'
+            );
+            const rotationUniformLocation = gl.getUniformLocation(
+                program,
+                'u_rotation'
+            );
+            const translationUniformLocation = gl.getUniformLocation(
+                program,
+                'u_translation'
+            );
+
+            const positionBuffer = gl.createBuffer();
+
+            function drawShape(
+                vertices,
+                color,
+                rotation = 0,
+                tx = 0,
+                ty = 0
+            ) {
+                gl.bindBuffer(gl.ARRAY_BUFFER, positionBuffer);
+                gl.bufferData(
+                    gl.ARRAY_BUFFER,
+                    new Float32Array(vertices),
+                    gl.STATIC_DRAW
+                );
+
+                gl.enableVertexAttribArray(positionAttributeLocation);
+                gl.vertexAttribPointer(
+                    positionAttributeLocation,
+                    2,
+                    gl.FLOAT,
+                    false,
+                    0,
+                    0
+                );
+
+                gl.uniform2f(
+                    resolutionUniformLocation,
+                    canvas.width,
+                    canvas.height
+                );
+                gl.uniform4fv(colorUniformLocation, color);
+                gl.uniform1f(rotationUniformLocation, rotation);
+                gl.uniform2f(translationUniformLocation, tx, ty);
+
+                gl.drawArrays(gl.TRIANGLES, 0, vertices.length / 2);
+            }
+
+            let time = 0;
+
+            function render() {
+                time += 0.02;
+
+                gl.clearColor(0, 0, 0, 1);
+                gl.clear(gl.COLOR_BUFFER_BIT);
+                gl.useProgram(program);
+
+                const centerX = canvas.width / 2;
+                const centerY = canvas.height / 2;
+
+                const bob = Math.sin(time) * 10;
+                const sway = Math.sin(time * 0.7) * 0.05;
+
+                const waveOffset = Math.sin(time * 2) * 5;
+                const wave1 = [
+                    -200, 65, 200, 65, 200, 70,
+                    -200, 65, 200, 70, -200, 70,
+                ];
+                drawShape(
+                    wave1,
+                    [0.1, 0.3, 0.5, 0.6],
+                    0,
+                    centerX + waveOffset,
+                    centerY + bob
+                );
+
+                const wave2 = [
+                    -200, 70, 200, 70, 200, 75,
+                    -200, 70, 200, 75, -200, 75,
+                ];
+                drawShape(
+                    wave2,
+                    [0.08, 0.25, 0.45, 0.5],
+                    0,
+                    centerX - waveOffset,
+                    centerY + bob
+                );
+
+                requestAnimationFrame(render);
+            }
+
+            render();
         })();
     </script>
 </body>
