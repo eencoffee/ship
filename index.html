@@ -232,6 +232,30 @@
                     centerY + bob
                 );
 
+                const mainSail = [
+                    5, -70, 50, -40, 50, -10,
+                    5, -70, 50, -10, 5, -10,
+                ];
+                drawShape(
+                    mainSail,
+                    [0.9, 0.9, 0.9, 1],
+                    sway + Math.sin(time * 2) * 0.03,
+                    centerX,
+                    centerY + bob
+                );
+
+                const frontSail = [
+                    5, -50, 45, -30, 45, 0,
+                    5, -50, 45, 0, 5, 0,
+                ];
+                drawShape(
+                    frontSail,
+                    [0.85, 0.85, 0.85, 1],
+                    sway + Math.sin(time * 2 + 0.5) * 0.03,
+                    centerX,
+                    centerY + bob
+                );
+
                 const waveOffset = Math.sin(time * 2) * 5;
                 const wave1 = [
                     -200, 65, 200, 65, 200, 70,
