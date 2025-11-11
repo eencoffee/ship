@@ -196,6 +196,18 @@
                 const bob = Math.sin(time) * 10;
                 const sway = Math.sin(time * 0.7) * 0.05;
 
+                const hull = [
+                    -60, 20, 60, 20, 50, 60,
+                    -60, 20, 50, 60, -50, 60,
+                ];
+                drawShape(
+                    hull,
+                    [0.4, 0.25, 0.1, 1],
+                    sway,
+                    centerX,
+                    centerY + bob
+                );
+
                 const waveOffset = Math.sin(time * 2) * 5;
                 const wave1 = [
                     -200, 65, 200, 65, 200, 70,
