@@ -256,6 +256,30 @@
                     centerY + bob
                 );
 
+                const crowsNest = [
+                    -8, -75, 8, -75, 6, -70,
+                    -8, -75, 6, -70, -6, -70,
+                ];
+                drawShape(
+                    crowsNest,
+                    [0.3, 0.15, 0.05, 1],
+                    sway,
+                    centerX,
+                    centerY + bob
+                );
+
+                const flagPole = [
+                    -1, -110, 1, -110, 1, -80,
+                    -1, -110, 1, -80, -1, -80,
+                ];
+                drawShape(
+                    flagPole,
+                    [0.2, 0.1, 0.05, 1],
+                    sway,
+                    centerX,
+                    centerY + bob
+                );
+
                 const waveOffset = Math.sin(time * 2) * 5;
                 const wave1 = [
                     -200, 65, 200, 65, 200, 70,
