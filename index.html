@@ -256,6 +256,17 @@
                     centerY + bob
                 );
 
+                const skull = [
+                    20, -45, 35, -45, 27.5, -35,
+                ];
+                drawShape(
+                    skull,
+                    [0.1, 0.1, 0.1, 1],
+                    sway + Math.sin(time * 2) * 0.03,
+                    centerX,
+                    centerY + bob
+                );
+
                 const crowsNest = [
                     -8, -75, 8, -75, 6, -70,
                     -8, -75, 6, -70, -6, -70,
@@ -276,6 +287,19 @@
                     flagPole,
                     [0.2, 0.1, 0.05, 1],
                     sway,
+                    centerX,
+                    centerY + bob
+                );
+
+                const flag = [
+                    1, -105, 25, -100, 25, -90,
+                    1, -105, 25, -90, 1, -95,
+                ];
+                const flagWave = Math.sin(time * 3) * 0.1;
+                drawShape(
+                    flag,
+                    [0.15, 0.15, 0.15, 1],
+                    sway + flagWave,
                     centerX,
                     centerY + bob
                 );
