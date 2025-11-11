@@ -304,6 +304,30 @@
                     centerY + bob
                 );
 
+                const cannon1 = [
+                    -40, 25, -25, 25, -25, 30,
+                    -40, 25, -25, 30, -40, 30,
+                ];
+                drawShape(
+                    cannon1,
+                    [0.2, 0.2, 0.2, 1],
+                    sway,
+                    centerX,
+                    centerY + bob
+                );
+
+                const cannon2 = [
+                    25, 25, 40, 25, 40, 30,
+                    25, 25, 40, 30, 25, 30,
+                ];
+                drawShape(
+                    cannon2,
+                    [0.2, 0.2, 0.2, 1],
+                    sway,
+                    centerX,
+                    centerY + bob
+                );
+
                 const waveOffset = Math.sin(time * 2) * 5;
                 const wave1 = [
                     -200, 65, 200, 65, 200, 70,
